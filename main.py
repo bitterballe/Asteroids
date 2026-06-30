@@ -42,7 +42,13 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-
+            if game_over and event.type == pygame.KEYDOWN:
+                if event.key in (pygame.K_ESCAPE, pygame.K_q):
+                    return
+                if event.key == pygame.K_r:
+                    # starta om
+                    return
+                
         if not game_over:    
             updatable.update(dt)    
             for asteroid in asteroids:
@@ -67,10 +73,27 @@ def main():
 
         if game_over:
             game_over_text = header_font.render("GAME OVER", True, "White")
-            text_rect = game_over_text.get_rect(
+            restart_text = font.render("Press R to restart", True, "White")
+            quit_text = font.render("Press ESC to quit", True, "White")
+            
+            game_over_rect = game_over_text.get_rect(
                 center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
             )
-            screen.blit(game_over_text, text_rect)
+            restart_rect = restart_text.get_rect (
+                midtop=(
+                    game_over_rect.centerx,
+                    game_over_rect.bottom + 20
+                )
+            )
+            quit_rect = quit_text.get_rect (
+                midtop=(
+                    restart_rect.centerx,
+                    restart_rect.bottom + 20
+                )
+            )
+            screen.blit(game_over_text, game_over_rect)
+            screen.blit(restart_text, restart_rect)
+            screen.blit(quit_text, quit_rect)
 
         pygame.display.flip()
         
